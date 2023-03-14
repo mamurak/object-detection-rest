@@ -1,65 +1,39 @@
-import base64
+from os import environ
 
-import tensorflow as tf
+from image_preprocessing import preprocess
+from object_detection import detect_objects
 
 
-model_dir = 'models/openimages_v4_ssd_mobilenet_v2_1'
-saved_model = tf.saved_model.load(model_dir)
-detector = saved_model.signatures['default']
+prediction_url = environ.get('PREDICTION_URL')
 
 
 def predict(body):
-    base64img = body.get('image')
-    img_bytes = base64.decodebytes(base64img.encode())
-    detections = _detect(img_bytes)
-    cleaned = _clean_detections(detections)
+    base64encoded_image = body.get('image')
+    image_data = preprocess(base64encoded_image)
+    detections = detect_objects(image_data, prediction_url)
+    mapped_detections = map_(*detections)
 
-    return {'detections': cleaned}
-
-
-def _detect(img):
-    image = tf.image.decode_jpeg(img, channels=3)
-    converted_img = tf.image.convert_image_dtype(
-        image, tf.float32)[tf.newaxis, ...]
-    result = detector(converted_img)
-    num_detections = len(result["detection_scores"])
-
-    output_dict = {
-        key: value.numpy().tolist() for key, value in result.items()
-    }
-    output_dict['num_detections'] = num_detections
-
-    return output_dict
+    return {'detections': mapped_detections}
 
 
-def _clean_detections(detections):
+def map_(boxes, scores, class_labels):
     cleaned = []
     max_boxes = 10
-    num_detections = min(detections['num_detections'], max_boxes)
+    num_detections = min(len(scores), max_boxes)
 
-    for i in range(0, num_detections):
+    for i in range(num_detections):
+        box = boxes[i]
         d = {
             'box': {
-                'yMin': detections['detection_boxes'][i][0],
-                'xMin': detections['detection_boxes'][i][1],
-                'yMax': detections['detection_boxes'][i][2],
-                'xMax': detections['detection_boxes'][i][3]
+                'yMin': box[0]/416,
+                'xMin': box[1]/416,
+                'yMax': box[2]/416,
+                'xMax': box[3]/416,
             },
-            'class': detections['detection_class_entities'][i].decode('utf-8'),
-            'label': detections['detection_class_entities'][i].decode('utf-8'),
-            'score': detections['detection_scores'][i],
+            'class': class_labels[i],
+            'label': class_labels[i],
+            'score': scores[i],
         }
         cleaned.append(d)
 
     return cleaned
-
-
-def _preload_model():
-    blank_jpg = tf.io.read_file('blank.jpeg')
-    blank_img = tf.image.decode_jpeg(blank_jpg, channels=3)
-    detector(
-        tf.image.convert_image_dtype(blank_img, tf.float32)[tf.newaxis, ...]
-    )
-
-
-_preload_model()

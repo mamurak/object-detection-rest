@@ -1,8 +1,7 @@
 ## Application specific 
 Flask
 gunicorn
+requests
 ## Data Science libraries
-tensorflow
-matplotlib
-six
+pillow
 numpy
