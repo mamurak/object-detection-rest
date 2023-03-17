@@ -1,7 +1,7 @@
 import numpy as np
 from requests import post
 
-from classes import classes
+from .classes import classes
 
 
 def detect_objects(image, prediction_url, token=''):

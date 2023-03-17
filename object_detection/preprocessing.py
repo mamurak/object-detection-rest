@@ -70,6 +70,5 @@ def _letterbox_image(image, size):
     return new_image
 
 
-
 if __name__ == '__main__':
     preprocess_image_folder(data_folder='/data')
