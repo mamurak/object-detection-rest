@@ -1,7 +1,6 @@
 from os import environ
 
-from image_preprocessing import preprocess
-from object_detection import detect_objects
+from object_detection import preprocess_encoded_image, detect_objects
 
 
 prediction_url = environ.get('PREDICTION_URL')
@@ -9,7 +8,7 @@ prediction_url = environ.get('PREDICTION_URL')
 
 def predict(body):
     base64encoded_image = body.get('image')
-    image_data = preprocess(base64encoded_image)
+    image_data = preprocess_encoded_image(base64encoded_image)
     detections = detect_objects(image_data, prediction_url)
     mapped_detections = map_(*detections)
 
