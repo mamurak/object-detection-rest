@@ -3,14 +3,21 @@ from os import environ
 from boto3 import client
 
 
-def load_model(bucket_name='', model_file_name=''):
+def load_model(model_file_name='tiny-yolov3-11.onnx'):
     print('Commencing model loading.')
 
-    s3_endpoint_url = environ.get('S3_ENDPOINT_URL')
-    s3_access_key = environ.get('S3_ACCESS_KEY')
-    s3_secret_key = environ.get('S3_SECRET_KEY')
-    s3_bucket_name = bucket_name or environ.get('S3_MODEL_BUCKET_NAME')
-    model_file_name = model_file_name or environ.get('MODEL_FILE_NAME')
+    s3_endpoint_url = environ.get(
+        'S3_ENDPOINT_URL', environ.get('AWS_S3_ENDPOINT')
+    )
+    s3_access_key = environ.get(
+        'S3_ACCESS_KEY', environ.get('AWS_ACCESS_KEY_ID')
+    )
+    s3_secret_key = environ.get(
+        'S3_SECRET_KEY', environ.get('AWS_SECRET_ACCESS_KEY')
+    )
+    s3_bucket_name = environ.get(
+        'S3_BUCKET_NAME', environ.get('AWS_S3_BUCKET')
+    )
 
     print(f'Downloading model from bucket {s3_bucket_name} '
           f'from S3 storage at {s3_endpoint_url}')
