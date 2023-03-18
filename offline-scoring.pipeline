@@ -335,7 +335,6 @@
             "mounted_volumes": [
               {
                 "path": "/data",
-                "pvc_name": "user2",
                 "read_only": false
               }
             ],
@@ -346,16 +345,13 @@
                 "value": "http://s3.openshift-storage.svc"
               },
               {
-                "env_var": "S3_ACCESS_KEY",
-                "value": "oIaoIzWxhYOgfPzIlqmy"
+                "env_var": "S3_ACCESS_KEY"
               },
               {
-                "env_var": "S3_SECRET_KEY",
-                "value": "CMK91Xn0QoymNjoy4i7/Dw6cMC9rTHESmQM+rZxk"
+                "env_var": "S3_SECRET_KEY"
               },
               {
-                "env_var": "S3_BUCKET_NAME",
-                "value": "user2"
+                "env_var": "S3_BUCKET_NAME"
               }
             ],
             "kubernetes_secrets": [],
