@@ -23,19 +23,13 @@
               "kubernetes_secrets": [],
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
-              "mounted_volumes": [
-                {
-                  "path": "/data",
-                  "pvc_name": "offline-scoring-pvc",
-                  "read_only": false
-                }
-              ],
+              "mounted_volumes": [],
               "filename": "data_ingestion.py"
             },
             "label": "",
             "ui_data": {
               "label": "data_ingestion.py",
-              "image": "/notebook/object-detection/dev/static/elyra/python.svg",
+              "image": "/notebook/user21/dev/static/elyra/python.svg",
               "x_pos": 97,
               "y_pos": 233,
               "description": "Run Python script"
@@ -85,19 +79,13 @@
               "kubernetes_secrets": [],
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
-              "mounted_volumes": [
-                {
-                  "path": "/data",
-                  "pvc_name": "offline-scoring-pvc",
-                  "read_only": false
-                }
-              ],
+              "mounted_volumes": [],
               "filename": "preprocessing.py"
             },
             "label": "",
             "ui_data": {
               "label": "preprocessing.py",
-              "image": "/notebook/object-detection/dev/static/elyra/python.svg",
+              "image": "/notebook/user21/dev/static/elyra/python.svg",
               "x_pos": 295,
               "y_pos": 233,
               "description": "Run Python script"
@@ -156,19 +144,13 @@
               "kubernetes_secrets": [],
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
-              "mounted_volumes": [
-                {
-                  "path": "/data",
-                  "pvc_name": "offline-scoring-pvc",
-                  "read_only": false
-                }
-              ],
+              "mounted_volumes": [],
               "filename": "scoring.py"
             },
             "label": "",
             "ui_data": {
               "label": "scoring.py",
-              "image": "/notebook/object-detection/dev/static/elyra/python.svg",
+              "image": "/notebook/user21/dev/static/elyra/python.svg",
               "x_pos": 475,
               "y_pos": 310,
               "description": "Run Python script"
@@ -230,19 +212,13 @@
               "kubernetes_secrets": [],
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
-              "mounted_volumes": [
-                {
-                  "path": "/data",
-                  "pvc_name": "offline-scoring-pvc",
-                  "read_only": false
-                }
-              ],
+              "mounted_volumes": [],
               "filename": "results_upload.py"
             },
             "label": "",
             "ui_data": {
               "label": "results_upload.py",
-              "image": "/notebook/object-detection/dev/static/elyra/python.svg",
+              "image": "/notebook/user21/dev/static/elyra/python.svg",
               "x_pos": 666,
               "y_pos": 309,
               "description": "Run Python script"
@@ -307,7 +283,7 @@
             "label": "",
             "ui_data": {
               "label": "model_loading.py",
-              "image": "/notebook/object-detection/dev/static/elyra/python.svg",
+              "image": "/notebook/user21/dev/static/elyra/python.svg",
               "x_pos": 192,
               "y_pos": 378,
               "description": "Run Python script"
@@ -353,50 +329,33 @@
           "name": "offline-scoring",
           "runtime": "Kubeflow Pipelines",
           "pipeline_defaults": {
-            "kubernetes_tolerations": [],
-            "mounted_volumes": [],
-            "kubernetes_pod_labels": [],
-            "kubernetes_pod_annotations": [],
-            "kubernetes_shared_mem_size": {},
-            "env_vars": [],
-            "kubernetes_secrets": [
+            "mounted_volumes": [
               {
-                "env_var": "S3_ACCESS_KEY",
-                "name": "offline-scoring-pipeline-secret",
-                "key": "S3_ACCESS_KEY"
-              },
-              {
-                "env_var": "S3_DATA_BUCKET_NAME",
-                "name": "offline-scoring-pipeline-secret",
-                "key": "S3_DATA_BUCKET_NAME"
-              },
-              {
-                "env_var": "S3_ENDPOINT_URL",
-                "name": "offline-scoring-pipeline-secret",
-                "key": "S3_ENDPOINT_URL"
-              },
-              {
-                "env_var": "S3_MODEL_BUCKET_NAME",
-                "name": "offline-scoring-pipeline-secret",
-                "key": "S3_MODEL_BUCKET_NAME"
-              },
-              {
-                "env_var": "S3_PREDICTION_BUCKET_NAME",
-                "name": "offline-scoring-pipeline-secret",
-                "key": "S3_PREDICTION_BUCKET_NAME"
-              },
-              {
-                "env_var": "S3_SECRET_KEY",
-                "name": "offline-scoring-pipeline-secret",
-                "key": "S3_SECRET_KEY"
-              },
-              {
-                "env_var": "MODEL_FILE_NAME",
-                "name": "offline-scoring-pipeline-secret",
-                "key": "MODEL_FILE_NAME"
+                "path": "/data",
+                "read_only": false
               }
             ],
-            "runtime_image": "quay.io/mmurakam/object-detection-kfp-runtime:object-detection-kfp-runtime-v0.1.0"
+            "kubernetes_pod_annotations": [],
+            "kubernetes_tolerations": [],
+            "kubernetes_shared_mem_size": {},
+            "kubernetes_pod_labels": [],
+            "kubernetes_secrets": [],
+            "env_vars": [
+              {
+                "env_var": "S3_ENDPOINT_URL",
+                "value": "http://s3.openshift-storage.svc"
+              },
+              {
+                "env_var": "S3_ACCESS_KEY"
+              },
+              {
+                "env_var": "S3_SECRET_KEY"
+              },
+              {
+                "env_var": "S3_BUCKET_NAME"
+              }
+            ],
+            "runtime_image": "quay.io/mmurakam/object-detection-notebook:object-detection-notebook-v0.1.0"
           },
           "pipeline_parameters": []
         }
