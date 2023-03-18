@@ -1,6 +1,7 @@
 from os import environ
 
-from object_detection import preprocess_encoded_image, detect_objects
+from object_detection import detect_objects
+from preprocessing import preprocess_encoded_image
 
 
 prediction_url = environ.get('PREDICTION_URL')
