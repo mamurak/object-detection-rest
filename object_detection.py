@@ -7,7 +7,7 @@ from classes import classes
 def detect_objects(image, prediction_url, token=''):
     payload = _serialize(image)
     model_response = _get_model_response(payload, prediction_url, token)
-    boxes, scores, class_labels = _postprocess(*model_response)
+    boxes, scores, class_labels = postprocess(*model_response)
     return boxes, scores, class_labels
 
 
@@ -53,7 +53,7 @@ def _unpack(response_item):
     return np.array(response_item['data']).reshape(response_item['shape'])
 
 
-def _postprocess(raw_boxes, raw_scores, raw_class_indices):
+def postprocess(raw_boxes, raw_scores, raw_class_indices):
     boxes, scores, detected_classes = [], [], []
     for raw_indices in raw_class_indices[0]:
         detected_classes.append(classes[raw_indices[1]])
