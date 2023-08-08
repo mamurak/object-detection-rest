@@ -1,7 +1,8 @@
 ## Application specific 
 Flask
 gunicorn
-requests
+requests==2.31.0
 ## Data Science libraries
-pillow
-numpy
+numpy==1.24.3
+torch==1.13.1
+torchvision==0.14.1

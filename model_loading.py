@@ -3,7 +3,7 @@ from os import environ
 from boto3 import client
 
 
-def load_model(model_file_name='tiny-yolov3-11.onnx'):
+def load_model(model_file_name='model-latest.onnx'):
     print('Commencing model loading.')
 
     s3_endpoint_url = environ.get(

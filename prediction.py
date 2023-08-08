@@ -1,38 +1,42 @@
 from os import environ
 
+from classes import classes
 from object_detection import detect_objects
 from preprocessing import preprocess_encoded_image
 
 
 prediction_url = environ.get('PREDICTION_URL')
+class_labels_type = environ.get('CLASS_LABELS_TYPE', 'coco')
+class_labels = classes[class_labels_type]
 
 
 def predict(body):
     base64encoded_image = body.get('image')
-    image_data = preprocess_encoded_image(base64encoded_image)
-    detections = detect_objects(image_data, prediction_url)
-    mapped_detections = map_(*detections)
+    transformed_image, scaling, padding = preprocess_encoded_image(
+        base64encoded_image
+    )
+    detections = detect_objects(
+        transformed_image, prediction_url, len(class_labels)
+    )
+    mapped_detections = map_(*detections, class_labels)
 
     return {'detections': mapped_detections}
 
 
-def map_(boxes, scores, class_labels):
+def map_(objects, class_labels, edge_length=640):
     cleaned = []
-    max_boxes = 10
-    num_detections = min(len(scores), max_boxes)
 
-    for i in range(num_detections):
-        box = boxes[i]
+    for object_ in objects:
         d = {
             'box': {
-                'yMin': box[0]/416,
-                'xMin': box[1]/416,
-                'yMax': box[2]/416,
-                'xMax': box[3]/416,
+                'yMin': float(object_[1]/edge_length),
+                'xMin': float(object_[0]/edge_length),
+                'yMax': float(object_[3]/edge_length),
+                'xMax': float(object_[2]/edge_length),
             },
-            'class': class_labels[i],
-            'label': class_labels[i],
-            'score': scores[i],
+            'class': class_labels[int(object_[5])],
+            'label': class_labels[int(object_[5])],
+            'score': float(object_[4]),
         }
         cleaned.append(d)
 
