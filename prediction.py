@@ -18,7 +18,7 @@ def predict(body):
     detections = detect_objects(
         transformed_image, prediction_url, len(class_labels)
     )
-    mapped_detections = map_(*detections, class_labels)
+    mapped_detections = map_(detections, class_labels)
 
     return {'detections': mapped_detections}
 
