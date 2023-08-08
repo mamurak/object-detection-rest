@@ -1,6 +1,6 @@
 ## Application specific 
-Flask
-gunicorn
+Flask==2.3.2
+gunicorn==21.2.0
 requests==2.31.0
 ## Data Science libraries
 numpy==1.24.3
