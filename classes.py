@@ -90,6 +90,5 @@ classes = {
         'Computer mouse',
         'Computer monitor',
         'Computer keyboard',
-        'Laptop',
     ],
 }
