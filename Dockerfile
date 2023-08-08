@@ -18,4 +18,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt && \
 
 COPY *.py ./
 
-CMD FLASK_APP=wsgi.py flask run
+CMD python3 /opt/app-root/bin/gunicorn wsgi --config gunicorn_config.py
