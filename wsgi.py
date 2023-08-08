@@ -16,3 +16,16 @@ def create_prediction():
     data = request.data or '{}'
     body = json.loads(data)
     return jsonify(predict(body))
+
+
+@application.errorhandler(Exception)
+def handle_exception(e):
+    print(f'Exception occurred: {e}')
+    response = {
+        'success': False,
+        'error': {
+            'type': type(e).__name__,
+            'message': str(e)
+        }
+    }
+    return jsonify(response), 500
