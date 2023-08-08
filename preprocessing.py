@@ -1,6 +1,5 @@
 import base64
 from glob import glob
-from io import BytesIO
 from os import path
 from pickle import dump
 
@@ -15,7 +14,8 @@ def preprocess_image_file(image_path):
 
 def preprocess_encoded_image(base64encoded_image):
     img_bytes = base64.decodebytes(base64encoded_image.encode())
-    image = cv2.imread(BytesIO(img_bytes))
+    img_array = np.frombuffer(img_bytes, dtype=np.uint8)
+    image = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
     return _transform(image)
 
 
