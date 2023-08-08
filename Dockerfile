@@ -18,4 +18,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt && \
 
 COPY *.py ./
 
-CMD python3 wsgi.py
+CMD FLASK_APP=wsgi.py flask run
