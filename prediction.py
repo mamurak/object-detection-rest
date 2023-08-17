@@ -1,14 +1,18 @@
 from os import environ
 
-from classes import classes
+from yaml import load, SafeLoader
+
+from classes import default_class_labels
 from object_detection import detect_objects
 from preprocessing import preprocess_encoded_image
 
 
 prediction_url = environ.get('PREDICTION_URL')
-class_labels_type = environ.get('CLASS_LABELS_TYPE', 'coco')
-class_labels = classes[class_labels_type]
-
+raw_class_labels = environ.get('CLASS_LABELS')
+class_labels = (
+    load(raw_class_labels, Loader=SafeLoader)
+    if raw_class_labels else default_class_labels
+)
 
 def predict(body):
     base64encoded_image = body.get('image')
