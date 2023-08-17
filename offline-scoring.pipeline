@@ -366,7 +366,7 @@
                 "key": "AWS_S3_ENDPOINT"
               }
             ],
-            "runtime_image": "quay.io/mmurakam/object-detection-notebook:object-detection-notebook-v0.1.0"
+            "runtime_image": "quay.io/mmurakam/runtimes:object-detection-v1.0.5"
           },
           "pipeline_parameters": [
             {
