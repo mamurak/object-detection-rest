@@ -1,4 +1,5 @@
 from os import environ
+from pprint import pformat
 
 from yaml import load, SafeLoader
 
@@ -13,8 +14,10 @@ class_labels = (
     load(raw_class_labels, Loader=SafeLoader)
     if raw_class_labels else default_class_labels
 )
+print(f'Using class labels: {pformat(class_labels)}')
 
 def predict(body):
+    print('Received prediction request.')
     base64encoded_image = body.get('image')
     transformed_image, scaling, padding = preprocess_encoded_image(
         base64encoded_image
@@ -23,8 +26,10 @@ def predict(body):
         transformed_image, prediction_url, len(class_labels)
     )
     mapped_detections = map_(detections, class_labels)
+    payload = {'detections': mapped_detections}
 
-    return {'detections': mapped_detections}
+    print(f'Prediction complete. Returning payload: {pformat(payload)}')
+    return payload
 
 
 def map_(objects, class_labels, edge_length=640):
