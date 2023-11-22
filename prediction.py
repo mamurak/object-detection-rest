@@ -51,10 +51,10 @@ def map_(objects, class_labels, scaling, padding, edge_length=640):
 
         d = {
             'box': {
-                'yMin': y0 / edge_length,
-                'xMin': x0 / edge_length,
-                'yMax': y1 / edge_length,
-                'xMax': x1 / edge_length,
+                'yMin': float(y0 / edge_length),
+                'xMin': float(x0 / edge_length),
+                'yMax': float(y1 / edge_length),
+                'xMax': float(x1 / edge_length),
             },
             'class': class_labels[int(object_[5])],
             'label': class_labels[int(object_[5])],
