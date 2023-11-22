@@ -37,7 +37,8 @@ def map_(objects, class_labels, scaling, padding, edge_length=640):
     cleaned = []
 
     for object_ in objects:
-        x0, y0, x1, y1 = object_[:4] / scaling
+        bbox = object_[:4].detach().cpu().numpy().tolist()
+        x0, y0, x1, y1 = [coord / scaling for coord in bbox]
 
         x0 -= padding[0]
         y0 -= padding[1]
@@ -51,10 +52,10 @@ def map_(objects, class_labels, scaling, padding, edge_length=640):
 
         d = {
             'box': {
-                'yMin': float(y0 / edge_length),
-                'xMin': float(x0 / edge_length),
-                'yMax': float(y1 / edge_length),
-                'xMax': float(x1 / edge_length),
+                'yMin': y0 / edge_length,
+                'xMin': x0 / edge_length,
+                'yMax': y1 / edge_length,
+                'xMax': x1 / edge_length,
             },
             'class': class_labels[int(object_[5])],
             'label': class_labels[int(object_[5])],
