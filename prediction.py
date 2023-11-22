@@ -16,6 +16,7 @@ class_labels = (
 )
 print(f'Using class labels: {pformat(class_labels)}')
 
+
 def predict(body):
     print('Received prediction request.')
     base64encoded_image = body.get('image')
@@ -25,23 +26,35 @@ def predict(body):
     detections = detect_objects(
         transformed_image, prediction_url, len(class_labels)
     )
-    mapped_detections = map_(detections, class_labels)
+    mapped_detections = map_(detections, class_labels, scaling, padding)
     payload = {'detections': mapped_detections}
 
     print(f'Prediction complete. Returning payload: {pformat(payload)}')
     return payload
 
 
-def map_(objects, class_labels, edge_length=640):
+def map_(objects, class_labels, scaling, padding, edge_length=640):
     cleaned = []
 
     for object_ in objects:
+        x0, y0, x1, y1 = object_[:4] / scaling
+
+        x0 -= padding[0]
+        y0 -= padding[1]
+        x1 -= padding[0]
+        y1 -= padding[1]
+
+        x0 = max(x0, 0)
+        y0 = max(y0, 0)
+        x1 = min(x1, edge_length)
+        y1 = min(y1, edge_length)
+
         d = {
             'box': {
-                'yMin': float(object_[1]/edge_length),
-                'xMin': float(object_[0]/edge_length),
-                'yMax': float(object_[3]/edge_length),
-                'xMax': float(object_[2]/edge_length),
+                'yMin': y0 / edge_length,
+                'xMin': x0 / edge_length,
+                'yMax': y1 / edge_length,
+                'xMax': x1 / edge_length,
             },
             'class': class_labels[int(object_[5])],
             'label': class_labels[int(object_[5])],
