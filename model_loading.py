@@ -28,7 +28,7 @@ def load_model(model_file_name='yolov5n.onnx'):
     )
 
     s3_client.download_file(
-        s3_bucket_name, model_file_name, 'model.onnx'
+        s3_bucket_name, f'models/{model_file_name}', 'model.onnx'
     )
 
     print('Finished model loading.')
