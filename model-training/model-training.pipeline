@@ -33,7 +33,8 @@
               "kubernetes_shared_mem_size": {},
               "kubernetes_tolerations": [],
               "mounted_volumes": [],
-              "filename": "data_ingestion.py"
+              "filename": "data_ingestion.py",
+              "memory": 7
             },
             "label": "",
             "ui_data": {
@@ -103,7 +104,7 @@
               "mounted_volumes": [],
               "filename": "model_training.py",
               "gpu": 0,
-              "memory": 8
+              "memory": 13
             },
             "label": "",
             "ui_data": {
@@ -408,7 +409,7 @@
               "description": "",
               "default_value": {
                 "type": "Integer",
-                "value": 500
+                "value": 100
               },
               "required": false
             },
@@ -426,7 +427,7 @@
               "description": "",
               "default_value": {
                 "type": "Integer",
-                "value": 2
+                "value": 1
               },
               "required": false
             },
