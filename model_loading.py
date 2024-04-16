@@ -3,7 +3,7 @@ from os import environ
 from boto3 import client
 
 
-def load_model(model_file_name='yolov5n.onnx'):
+def load_model(model_path='yolov5n/1/yolov5n.onnx'):
     print('Commencing model loading.')
 
     s3_endpoint_url = environ.get(
@@ -28,7 +28,7 @@ def load_model(model_file_name='yolov5n.onnx'):
     )
 
     s3_client.download_file(
-        s3_bucket_name, f'models/{model_file_name}', 'model.onnx'
+        s3_bucket_name, f'models/{model_path}', 'model.onnx'
     )
 
     print('Finished model loading.')

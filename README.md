@@ -73,7 +73,7 @@ Give other users access to the created project. https://github.com/{my-org}/{my-
 
 
 ## Data Science Workflow
-1. Visit the RHODS dashboard
+1. Visit the RHOAI dashboard
 1. Launch JupyterHub
 1. Spawn notebook
    1. Select notebook image
