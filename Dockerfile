@@ -11,10 +11,7 @@ RUN dnf -y update \
 USER 1001
 
 COPY requirements.txt ./
-RUN pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 uninstall -y opencv-python && \
-    pip3 uninstall -y opencv-python-headless && \
-    pip3 install opencv-python-headless==4.8.0.74
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY *.py ./
 

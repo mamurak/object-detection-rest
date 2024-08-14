@@ -1,21 +1,21 @@
-import base64
+from base64 import b64decode
 from glob import glob
+from io import BytesIO
 from os import path
 from pickle import dump
 
-import cv2
+from PIL import Image, ImageOps
 import numpy as np
 
 
 def preprocess_image_file(image_path):
-    image = cv2.imread(image_path)
+    image = Image.open(image_path)
     return _transform(image)
 
 
 def preprocess_encoded_image(base64encoded_image):
-    img_bytes = base64.decodebytes(base64encoded_image.encode())
-    img_array = np.frombuffer(img_bytes, dtype=np.uint8)
-    image = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+    img_bytes = b64decode(base64encoded_image)
+    image = Image.open(BytesIO(img_bytes))
     return _transform(image)
 
 
@@ -48,7 +48,7 @@ def _scan_images_folder(images_folder):
 
 def _transform(image, image_size=640):
     image, ratio, dwdh = _letterbox_image(image, image_size, auto=False)
-    image = image.transpose((2, 0, 1))  # HWC->CHW for PyTorch model
+    image = np.array(image).transpose((2, 0, 1))  # HWC->CHW for PyTorch model
     image = np.expand_dims(image, 0)  # Model expects an array of images
     image = np.ascontiguousarray(image)
     # Speed up things by rewriting the array contiguously in memory
@@ -62,18 +62,18 @@ def _letterbox_image(
         im, image_size, color=(114, 114, 114), auto=True, scaleup=True, stride=32):
 
     # Resize and pad image while meeting stride-multiple constraints
-    shape = im.shape[:2]  # current shape [height, width]
+    shape = im.size  # current shape [width, height]
     new_shape = image_size
     if isinstance(new_shape, int):
         new_shape = (new_shape, new_shape)
 
     # Scale ratio (new / old)
-    r = min(new_shape[0] / shape[0], new_shape[1] / shape[1])
+    r = min(new_shape[0] / shape[1], new_shape[1] / shape[0])
     if not scaleup:  # only scale down, do not scale up (for better val mAP)
         r = min(r, 1.0)
 
     # Compute padding
-    new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
+    new_unpad = int(round(shape[0] * r)), int(round(shape[1] * r))
     dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]  # wh padding
 
     if auto:  # minimum rectangle
@@ -82,13 +82,11 @@ def _letterbox_image(
     dw /= 2  # divide padding into 2 sides
     dh /= 2
 
-    if shape[::-1] != new_unpad:  # resize
-        im = cv2.resize(im, new_unpad, interpolation=cv2.INTER_LINEAR)
-    top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
-    left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
-    im = cv2.copyMakeBorder(
-        im, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color
-    )  # add border
+    if shape != new_unpad[::-1]:  # resize
+        im = im.resize(new_unpad, Image.BILINEAR)
+
+    # Add border
+    im = ImageOps.expand(im, border=(int(dw), int(dh)), fill=color)
 
     return im, r, (dw, dh)
 
