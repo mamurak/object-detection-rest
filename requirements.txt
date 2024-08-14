@@ -5,5 +5,3 @@ requests==2.31.0
 pyyaml==6.0.1
 ## Data Science libraries
 numpy==1.24.3
-torch==1.13.1
-torchvision==0.14.1
