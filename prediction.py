@@ -37,7 +37,7 @@ def map_(objects, class_labels, scaling, padding, edge_length=640):
     cleaned = []
 
     for object_ in objects:
-        bbox = object_[:4].detach().cpu().numpy().tolist()
+        bbox = object_[:4].tolist()
         x0, y0, x1, y1 = [coord / scaling for coord in bbox]
 
         x0 -= padding[0]
