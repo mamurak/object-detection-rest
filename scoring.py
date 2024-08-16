@@ -14,9 +14,10 @@ from classes import default_class_labels
 def predict(class_labels=None, data_folder='./data'):
     print('Commencing offline scoring.')
 
-    raw_class_labels = environ.get('class_labels')
+    raw_class_labels = environ.get('class_labels', 'default')
     class_labels = class_labels if class_labels else (
-        raw_class_labels.split(',') if raw_class_labels
+        raw_class_labels.split(',')
+        if raw_class_labels != 'default'
         else default_class_labels
     )
     print(f'Class labels are: {pformat(class_labels)}')
@@ -27,7 +28,9 @@ def predict(class_labels=None, data_folder='./data'):
     with open(f'{data_folder}/images.pickle', 'rb') as inputfile:
         image_names, images = load(inputfile)
 
-    session = InferenceSession('model.onnx')
+    session = InferenceSession(
+        'model.onnx', providers=['CPUExecutionProvider']
+    )
 
     raw_results = np.array([
         session.run([], {'images': image_data})[0]

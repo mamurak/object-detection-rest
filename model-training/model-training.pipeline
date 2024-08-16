@@ -101,7 +101,13 @@
                 "size": 10
               },
               "kubernetes_tolerations": [],
-              "mounted_volumes": [],
+              "mounted_volumes": [
+                {
+                  "path": "/dev/shm",
+                  "pvc_name": "shared-memory-pvc",
+                  "read_only": false
+                }
+              ],
               "filename": "model_training.py",
               "gpu": 0,
               "memory": 13
@@ -401,7 +407,7 @@
                 "key": "AWS_S3_ENDPOINT"
               }
             ],
-            "runtime_image": "quay.io/mmurakam/runtimes:object-detection-v1.1.0"
+            "runtime_image": "quay.io/mmurakam/runtimes:object-detection-v2.1.0"
           },
           "pipeline_parameters": [
             {
